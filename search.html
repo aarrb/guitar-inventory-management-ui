@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Guitars</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header>
+        <h1>Guitar Inventory Management</h1>
+        <nav>
+            <a href="about.html">About</a>
+            <a href="add.html">Add</a>
+            <a href="search.html">Search</a>
+        </nav>
+    </header>
+
+    <form id="searchForm">
+        <div class="form-group">
+            <label for="serialSearch">Serial Number:</label>
+            <input id="serialSearch" type="text" name="serial">
+        </div>
+        <div class="form-group">
+            <label for="builderSearch">Builder:</label>
+            <input id="builderSearch" type="text" name="builder">
+        </div>
+        <div class="form-group">
+            <label for="modelSearch">Model:</label>
+            <input id="modelSearch" type="text" name="model">
+        </div>
+        <div class="form-group">
+            <label for="typeSearch">Type:</label>
+            <input id="typeSearch" type="text" name="type">
+        </div>
+        <div class="form-group">
+            <label for="backWoodSearch">Back wood:</label>
+            <input id="backWoodSearch" type="text" name="backWood">
+        </div>
+        <div class="form-group">
+            <label for="topWoodSearch">Top wood:</label>
+            <input id="topWoodSearch" type="text" name="topWood">
+        </div>
+        <div id="searchButtonDiv">
+        <button id="searchButton" type="button" onclick="searchGuitars()">Search</button>
+        </div>
+    </form>
+
+    <table id="resultsTable">
+        <thead>
+            <tr>
+                <th>Serial number</th>
+                <th>Builder</th>
+                <th>Model</th>
+                <th>Type</th>
+                <th>Back wood</th>
+                <th>Top wood</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+
+    <script>
+        // Hardcoded list of guitars
+        let guitars = [
+            { serialNumber: '1', price: '10', builder: 'Fender', model: 'Stratocaster', type: 'Electric', backWood: 'Alder', topWood: 'Maple' },
+            { serialNumber: '2', price: '20', builder: 'Gibson', model: 'Les Paul', type: 'Electric', backWood: 'Mahogany', topWood: 'Maple' },
+            { serialNumber: '3', price: '30', builder: 'Yamaha', model: 'Venus', type: 'Electric', backWood: 'Spruce', topWood: 'Maple' },
+             { serialNumber: '4', price: '40', builder: 'Gibson', model: 'Les Paul', type: 'Electric', backWood: 'Mahogany', topWood: 'Maple' },
+              { serialNumber: '5', price: '50', builder: 'Chuck', model: 'Ultra', type: 'Electric', backWood: 'Spruce', topWood: 'Maple' },
+        
+        
+        ];
+
+        function searchGuitars() {
+            var serialValue = document.getElementById('serialSearch').value.toLowerCase()
+                var builderValue = document.getElementById('builderSearch').value.toLowerCase();
+                var modelValue = document.getElementById('modelSearch').value.toLowerCase();
+                var typeValue = document.getElementById('typeSearch').value.toLowerCase();
+                var backWoodValue = document.getElementById('backWoodSearch').value.toLowerCase();
+                var topWoodValue = document.getElementById('topWoodSearch').value.toLowerCase();
+                var resultsTable = document.getElementById('resultsTable').getElementsByTagName('tbody')[0];
+                resultsTable.innerHTML = ''; // Clear previous results
+
+                // Filter the list of guitars
+                var filteredGuitars = guitars.filter(function (guitar) {
+                    return (!serialValue || guitar.serialNumber.toLowerCase().includes(serialValue)) &&
+                    (!builderValue || guitar.builder.toLowerCase().includes(builderValue)) &&
+                        (!modelValue || guitar.model.toLowerCase().includes(modelValue)) &&
+                        (!typeValue || guitar.type.toLowerCase().includes(typeValue)) &&
+                        (!backWoodValue || guitar.backWood.toLowerCase().includes(backWoodValue)) &&
+                        (!topWoodValue || guitar.topWood.toLowerCase().includes(topWoodValue));
+                });
+
+                // Add the filtered guitars to the table
+                filteredGuitars.forEach(function (guitar) {
+                    var row = resultsTable.insertRow();
+                    Object.values(guitar).forEach(function (text) {
+                        var cell = row.insertCell();
+                        cell.textContent = text;
+                    });
+                });
+
+                // Clear search fields
+                document.getElementById('serialSea').value = '';
+                document.getElementById('builderSearch').value = '';
+                document.getElementById('modelSearch').value = '';
+                document.getElementById('typeSearch').value = '';
+                document.getElementById('backWoodSearch').value = '';
+                document.getElementById('topWoodSearch').value = '';
+            }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,157 @@
+body {
+    background-color: #ECE0C4;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+    margin-top: 25px;
+}
+
+header h1 {
+    color: #C45508;
+}
+
+nav a {
+    text-decoration: none;
+    color: #000;
+    margin: 0 15px;
+    font-weight: bold;
+    font-size: x-large;
+
+}
+
+img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    max-width: 100%;
+    height: auto;
+    padding-top: 50px;
+}
+
+.header-link {
+    color: #C45508;
+    text-decoration: none;
+}
+
+form {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 50px;
+}
+
+form label,
+form input {
+    margin: 10px 0;
+    /* Adds spacing between each label/input pair */
+}
+
+form input {
+    width: 100%;
+    /* Ensures the input fields take up the full width of the form container */
+    padding: 8px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+    /* Ensures padding doesn't add to the width */
+}
+
+form button {
+    color: black;
+    font-size: larger;
+    background-color: #C5B58E;
+    margin-top: 20px;
+    border-radius: 5px;
+}
+
+
+.form-group {
+    font-size: x-large;
+
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.form-group label {
+    width: 120px;
+    text-align: right;
+    margin-right: 10px;
+}
+
+.form-group input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #fff;
+}
+
+th,
+td {
+    border: 1px solid #000;
+    text-align: left;
+    padding: 8px;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+th {
+    text-align: center;
+}
+
+tr:hover {
+    background-color: #ddd;
+    /* Hover effect on table rows */
+    
+}
+
+/* styling for search input field and button */
+#searchInput {
+    padding: 8px;
+    margin-top: 20px;
+    /* Adjust as needed */
+    margin-right: 10px;
+    box-sizing: border-box;
+    /* Ensures padding doesn't add to the width */
+}
+#searchButtonDiv{
+    text-align: right;
+
+}
+
+#searchButton {
+    
+    padding: 10px 16px;
+
+   
+    /* Adjust padding as needed */
+ 
+    /* Change to your desired button color */
+    color: black;
+    
+
+    border: none;
+    cursor: pointer;
+
+  
+}
+#addButton{
+    padding: 10px 16px;
+    text-align: right;
+    justify-content: right;
+    border:none
+}
+
+
