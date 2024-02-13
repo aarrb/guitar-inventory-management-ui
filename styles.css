@@ -134,11 +134,6 @@ tr:hover {
 #searchButton {
     
     padding: 10px 16px;
-
-   
-    /* Adjust padding as needed */
- 
-    /* Change to your desired button color */
     color: black;
     
 
@@ -153,5 +148,3 @@ tr:hover {
     justify-content: right;
     border:none
 }
-
-
