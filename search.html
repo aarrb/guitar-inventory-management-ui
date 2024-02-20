@@ -24,6 +24,10 @@
             <input id="serialSearch" type="text" name="serial">
         </div>
         <div class="form-group">
+            <label for="priceSearch">Price:</label>
+            <input id="priceSearch" type="text" name="price">
+        </div>
+        <div class="form-group">
             <label for="builderSearch">Builder:</label>
             <input id="builderSearch" type="text" name="builder">
         </div>
@@ -64,49 +68,79 @@
 
         </tbody>
 
-    <script>
-        let host = "http://localhost:8080";
+   <script>
+    let host = "http://localhost:8080"; // Replace with your backend's host
 
-        async function searchGuitars() {
-            var serialValue = document.getElementById('serialSearch').value;
-            var builderValue = document.getElementById('builderSearch').value;
-            var modelValue = document.getElementById('modelSearch').value;
-            var typeValue = document.getElementById('typeSearch').value;
-            var backWoodValue = document.getElementById('backWoodSearch').value;
-            var topWoodValue = document.getElementById('topWoodSearch').value;
-            var resultsTable = document.getElementById('resultsTable').getElementsByTagName('tbody')[0];
-            resultsTable.innerHTML = ''; // Clear previous results
+    async function searchGuitars() {
+        console.log("searchGuitars function called");
+        displayResults([]);
 
-            // Construct the query URL
-            var queryURL = `${host}/search?` +
-                `serialNumber=${encodeURIComponent(serialValue)}&` +
-                `builder=${encodeURIComponent(builderValue)}&` +
-                `model=${encodeURIComponent(modelValue)}&` +
-                `type=${encodeURIComponent(typeValue)}&` +
-                `backWood=${encodeURIComponent(backWoodValue)}&` +
-                `topWood=${encodeURIComponent(topWoodValue)}`;
+        // Get the values from the form
+        var params = {
+            serialNumber: document.getElementById('serialSearch').value,
+            price: document.getElementById('priceSearch').value,
+            builder: document.getElementById('builderSearch').value.toUpperCase(),
+            model: document.getElementById('modelSearch').value,
+            type: document.getElementById('typeSearch').value.toUpperCase(),
+            backWood: document.getElementById('backWoodSearch').value.toUpperCase(),
+            topWood: document.getElementById('topWoodSearch').value.toUpperCase()
+        };
 
-            try {
-                let response = await fetch(queryURL);
-                if (response.ok) {
-                    let guitars = await response.json();
-                    // Add the filtered guitars to the table
-                    guitars.forEach(function (guitar) {
-                        var row = resultsTable.insertRow();
-                        Object.values(guitar).forEach(function (text) {
-                            var cell = row.insertCell();
-                            cell.textContent = text;
-                        });
-                    });
+        console.log("Search parameters before filtering:", params);
+
+        // Filter out empty parameters
+        var filteredParams = Object.fromEntries(Object.entries(params).filter(([_, v]) => v.trim() !== ''));
+        console.log("Filtered search parameters:", filteredParams);
+
+        // Construct the query string with only non-empty parameters
+        var queryString = Object.keys(filteredParams).map(key => key + '=' + encodeURIComponent(filteredParams[key])).join('&');
+        console.log("Query string:", queryString);
+
+        // Send data to backend
+        try {
+            console.log("Sending request to:", `${host}/search?${queryString}`);
+            let response = await fetch(`${host}/search?${queryString}`);
+
+            console.log("Received response:", response);
+            if (response.ok) {
+                let guitars = await response.json();
+                console.log("Search results:", guitars);
+
+                if (Array.isArray(guitars) && guitars.length > 0) {
+                    displayResults(guitars);
                 } else {
-                    alert("Error fetching data: " + response.statusText);
+                    console.log("No results to display or unexpected data structure:", guitars);
                 }
-            } catch (error) {
-                alert("Something went wrong. Please try again or contact the customer support team.");
-                console.error('Error:', error.message);
+            } else {
+                console.error('Response:', response);
+                response.text().then(text => console.error(text));
+                throw new Error('Something went wrong on the server');
             }
+        } catch (error) {
+            alert("Something went wrong. Please try again or contact the customer support team.");
+            console.error('Error:', error.message);
         }
-    </script>
+    }
+
+    function displayResults(guitars) {
+        console.log("Displaying results", guitars);
+        var resultsTable = document.getElementById('resultsTable').getElementsByTagName('tbody')[0];
+        resultsTable.innerHTML = ''; // Clear previous results
+
+        console.log("Clearing existing results");
+
+        // Add new rows to the table
+        guitars.forEach(guitar => {
+            var row = resultsTable.insertRow();
+            Object.values(guitar).forEach(text => {
+                var cell = row.insertCell();
+                cell.textContent = text;
+            });
+        });
+
+        console.log("Results displayed");
+    }
+</script>
 </body>
 
 </html>
