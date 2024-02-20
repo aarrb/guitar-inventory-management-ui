@@ -57,11 +57,11 @@
             var guitar = {
                 serialNumber: document.getElementById('serialNumber').value,
                 price: parseFloat(document.getElementById('price').value),
-                builder: document.getElementById('builder').value.toUpperCase(), // Convert to uppercase for enum
+                builder: document.getElementById('builder').value.toUpperCase(),
                 model: document.getElementById('model').value,
-                type: document.getElementById('type').value.toUpperCase(), // Convert to uppercase for enum
-                backWood: document.getElementById('backWood').value.toUpperCase(), // Convert to uppercase for enum
-                topWood: document.getElementById('topWood').value.toUpperCase() // Convert to uppercase for enum
+                type: document.getElementById('type').value.toUpperCase(),
+                backWood: document.getElementById('backWood').value.toUpperCase(),
+                topWood: document.getElementById('topWood').value.toUpperCase() 
             };
            
 
@@ -73,7 +73,6 @@
                 }
             }
 
-            // Send data to backend
             let request = {
                 method: "POST",
                 headers: {

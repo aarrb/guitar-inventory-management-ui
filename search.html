@@ -65,11 +65,10 @@
             </tr>
         </thead>
         <tbody>
-
         </tbody>
 
    <script>
-    let host = "http://localhost:8080"; // Replace with your backend's host
+    let host = "http://localhost:8080";
 
     async function searchGuitars() {
         console.log("searchGuitars function called");
@@ -86,31 +85,21 @@
             topWood: document.getElementById('topWoodSearch').value.toUpperCase()
         };
 
-        console.log("Search parameters before filtering:", params);
-
         // Filter out empty parameters
         var filteredParams = Object.fromEntries(Object.entries(params).filter(([_, v]) => v.trim() !== ''));
         console.log("Filtered search parameters:", filteredParams);
 
         // Construct the query string with only non-empty parameters
         var queryString = Object.keys(filteredParams).map(key => key + '=' + encodeURIComponent(filteredParams[key])).join('&');
-        console.log("Query string:", queryString);
-
-        // Send data to backend
         try {
-            console.log("Sending request to:", `${host}/search?${queryString}`);
             let response = await fetch(`${host}/search?${queryString}`);
-
-            console.log("Received response:", response);
             if (response.ok) {
                 let guitars = await response.json();
                 console.log("Search results:", guitars);
 
                 if (Array.isArray(guitars) && guitars.length > 0) {
                     displayResults(guitars);
-                } else {
-                    console.log("No results to display or unexpected data structure:", guitars);
-                }
+                } 
             } else {
                 console.error('Response:', response);
                 response.text().then(text => console.error(text));
@@ -122,23 +111,22 @@
         }
     }
 
-    function displayResults(guitars) {
-        console.log("Displaying results", guitars);
+   function displayResults(guitars) {
         var resultsTable = document.getElementById('resultsTable').getElementsByTagName('tbody')[0];
         resultsTable.innerHTML = ''; // Clear previous results
-
-        console.log("Clearing existing results");
 
         // Add new rows to the table
         guitars.forEach(guitar => {
             var row = resultsTable.insertRow();
-            Object.values(guitar).forEach(text => {
-                var cell = row.insertCell();
-                cell.textContent = text;
-            });
+            // Explicitly set the cell values in the correct order
+            row.insertCell().textContent = guitar.serialNumber || '';
+            row.insertCell().textContent = guitar.price || '';
+            row.insertCell().textContent = guitar.builder || '';
+            row.insertCell().textContent = guitar.model || '';
+            row.insertCell().textContent = guitar.type || '';
+            row.insertCell().textContent = guitar.backWood || '';
+            row.insertCell().textContent = guitar.topWood || '';
         });
-
-        console.log("Results displayed");
     }
 </script>
 </body>
