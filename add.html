@@ -50,17 +50,51 @@
     </form>
 
     <script>
-        function addGuitar() {
+        let host = "https://primes-service-latest-v4sq.onrender.com";
+
+        async function addGuitar() {
+            // Get the values from the form
             var guitar = {
                 serialNumber: document.getElementById('serialNumber').value,
-                price: document.getElementById('price').value,
-                builder: document.getElementById('builder').value,
+                price: parseFloat(document.getElementById('price').value),
+                builder: document.getElementById('builder').value.toUpperCase(),
                 model: document.getElementById('model').value,
-                type: document.getElementById('type').value,
-                backWood: document.getElementById('backWood').value,
-                topWood: document.getElementById('topWood').value
+                type: document.getElementById('type').value.toUpperCase(),
+                backWood: document.getElementById('backWood').value.toUpperCase(),
+                topWood: document.getElementById('topWood').value.toUpperCase() 
             };
-            alert("Guitar added: " + JSON.stringify(guitar));
+           
+
+            // Check for empty fields
+           for (var key in guitar) {
+                if (guitar[key] === "" || (key === "price" && isNaN(parseFloat(guitar[key])))) {
+                    alert("Please enter a valid value for " + key);
+                    return; // Stop the function if a field is empty or price is invalid
+                }
+            }
+
+            let request = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(guitar)
+            };
+
+               try {
+                let response = await fetch(host + "/add", request);
+
+                if (response.status === 200) {
+                    alert("The guitar was added to the system");
+                } else {
+                    console.error('Response:', response);
+                    response.text().then(text => console.error(text)); // Log the response body
+                    throw new Error('Something went wrong on the server');
+                }
+            } catch (error) {
+                alert("Something went wrong. Please try again or contact the customer support team.");
+                console.error('Error:', error.message); // Log the error message
+            }
         }
     </script>
 </body>

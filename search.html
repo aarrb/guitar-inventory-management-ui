@@ -24,6 +24,10 @@
             <input id="serialSearch" type="text" name="serial">
         </div>
         <div class="form-group">
+            <label for="priceSearch">Price:</label>
+            <input id="priceSearch" type="text" name="price">
+        </div>
+        <div class="form-group">
             <label for="builderSearch">Builder:</label>
             <input id="builderSearch" type="text" name="builder">
         </div>
@@ -61,59 +65,70 @@
             </tr>
         </thead>
         <tbody>
-
         </tbody>
 
-    <script>
-        // Hardcoded list of guitars
-        let guitars = [
-            { serialNumber: '1', price: '10', builder: 'Fender', model: 'Stratocaster', type: 'Electric', backWood: 'Alder', topWood: 'Maple' },
-            { serialNumber: '2', price: '20', builder: 'Gibson', model: 'Les Paul', type: 'Electric', backWood: 'Mahogany', topWood: 'Maple' },
-            { serialNumber: '3', price: '30', builder: 'Yamaha', model: 'Venus', type: 'Electric', backWood: 'Spruce', topWood: 'Maple' },
-             { serialNumber: '4', price: '40', builder: 'Gibson', model: 'Les Paul', type: 'Electric', backWood: 'Mahogany', topWood: 'Maple' },
-              { serialNumber: '5', price: '50', builder: 'Chuck', model: 'Ultra', type: 'Electric', backWood: 'Spruce', topWood: 'Maple' },
-        
-        
-        ];
+   <script>
+    let host = "https://primes-service-latest-v4sq.onrender.com";
 
-        function searchGuitars() {
-            var serialValue = document.getElementById('serialSearch').value.toLowerCase()
-                var builderValue = document.getElementById('builderSearch').value.toLowerCase();
-                var modelValue = document.getElementById('modelSearch').value.toLowerCase();
-                var typeValue = document.getElementById('typeSearch').value.toLowerCase();
-                var backWoodValue = document.getElementById('backWoodSearch').value.toLowerCase();
-                var topWoodValue = document.getElementById('topWoodSearch').value.toLowerCase();
-                var resultsTable = document.getElementById('resultsTable').getElementsByTagName('tbody')[0];
-                resultsTable.innerHTML = ''; // Clear previous results
+    async function searchGuitars() {
+        console.log("searchGuitars function called");
+        displayResults([]);
 
-                // Filter the list of guitars
-                var filteredGuitars = guitars.filter(function (guitar) {
-                    return (!serialValue || guitar.serialNumber.toLowerCase().includes(serialValue)) &&
-                    (!builderValue || guitar.builder.toLowerCase().includes(builderValue)) &&
-                        (!modelValue || guitar.model.toLowerCase().includes(modelValue)) &&
-                        (!typeValue || guitar.type.toLowerCase().includes(typeValue)) &&
-                        (!backWoodValue || guitar.backWood.toLowerCase().includes(backWoodValue)) &&
-                        (!topWoodValue || guitar.topWood.toLowerCase().includes(topWoodValue));
-                });
+        // Get the values from the form
+        var params = {
+            serialNumber: document.getElementById('serialSearch').value,
+            price: document.getElementById('priceSearch').value,
+            builder: document.getElementById('builderSearch').value.toUpperCase(),
+            model: document.getElementById('modelSearch').value,
+            type: document.getElementById('typeSearch').value.toUpperCase(),
+            backWood: document.getElementById('backWoodSearch').value.toUpperCase(),
+            topWood: document.getElementById('topWoodSearch').value.toUpperCase()
+        };
 
-                // Add the filtered guitars to the table
-                filteredGuitars.forEach(function (guitar) {
-                    var row = resultsTable.insertRow();
-                    Object.values(guitar).forEach(function (text) {
-                        var cell = row.insertCell();
-                        cell.textContent = text;
-                    });
-                });
+        // Filter out empty parameters
+        var filteredParams = Object.fromEntries(Object.entries(params).filter(([_, v]) => v.trim() !== ''));
+        console.log("Filtered search parameters:", filteredParams);
 
-                // Clear search fields
-                document.getElementById('serialSearch').value = '';
-                document.getElementById('builderSearch').value = '';
-                document.getElementById('modelSearch').value = '';
-                document.getElementById('typeSearch').value = '';
-                document.getElementById('backWoodSearch').value = '';
-                document.getElementById('topWoodSearch').value = '';
+        // Construct the query string with only non-empty parameters
+        var queryString = Object.keys(filteredParams).map(key => key + '=' + encodeURIComponent(filteredParams[key])).join('&');
+        try {
+            let response = await fetch(`${host}/search?${queryString}`);
+            if (response.ok) {
+                let guitars = await response.json();
+                console.log("Search results:", guitars);
+
+                if (Array.isArray(guitars) && guitars.length > 0) {
+                    displayResults(guitars);
+                } 
+            } else {
+                console.error('Response:', response);
+                response.text().then(text => console.error(text));
+                throw new Error('Something went wrong on the server');
             }
-    </script>
+        } catch (error) {
+            alert("Something went wrong. Please try again or contact the customer support team.");
+            console.error('Error:', error.message);
+        }
+    }
+
+   function displayResults(guitars) {
+        var resultsTable = document.getElementById('resultsTable').getElementsByTagName('tbody')[0];
+        resultsTable.innerHTML = ''; // Clear previous results
+
+        // Add new rows to the table
+        guitars.forEach(guitar => {
+            var row = resultsTable.insertRow();
+            // Explicitly set the cell values in the correct order
+            row.insertCell().textContent = guitar.serialNumber || '';
+            row.insertCell().textContent = guitar.price || '';
+            row.insertCell().textContent = guitar.builder || '';
+            row.insertCell().textContent = guitar.model || '';
+            row.insertCell().textContent = guitar.type || '';
+            row.insertCell().textContent = guitar.backWood || '';
+            row.insertCell().textContent = guitar.topWood || '';
+        });
+    }
+</script>
 </body>
 
 </html>
