@@ -55,7 +55,7 @@ async function login() {
         body: JSON.stringify(customer)
     };
     try {
-        let response = await fetch('https://primes-service-latest-v4sq.onrender.com/signin', request);
+        let response = await fetch('https://guitars-inventory-service.onrender.com/signin', request);
         if(response.status == 200) {
             alert("The login was successful!");
             const token = await response.text();
